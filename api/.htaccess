@@ -1,0 +1,9 @@
+SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-l
+RewriteRule tasks tasks.php [L]
+RewriteRule users users.php [L]
+RewriteRule login login.php [L]
+RewriteRule index index.php
