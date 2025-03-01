@@ -18,8 +18,14 @@ if (!array_key_exists("username", $_POST) || !array_key_exists("password", $_POS
         http_response_code(401);
         echo json_encode(["message" => "Invalid credentials"]);
     } else {
-        $access_token = json_encode(["user_id" => $user["id"], "username" => $user["username"]]);
-        echo json_encode(["access_token" => base64_encode($access_token)]);
+        //$data = ["user_id" => $user["id"], "username" => $user["username"]];
+        //$access_token = json_encode($data);
+        //echo json_encode(["access_token" => base64_encode($access_token)]);
+        $data = ["sub" => $user["id"], "username" => $user["username"]];
+        
+        $codec = new JWTCodec($_ENV["SECRET_KEY"]);
+        echo json_encode(["access_token" => $codec->getJWTToken($data)]);
+
     }
 }
 
