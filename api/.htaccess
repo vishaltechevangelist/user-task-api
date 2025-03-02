@@ -6,4 +6,5 @@ RewriteCond %{REQUEST_FILENAME} !-l
 RewriteRule tasks tasks.php [L]
 RewriteRule users users.php [L]
 RewriteRule login login.php [L]
+RewriteRule refresh refresh.php [L]
 RewriteRule index index.php

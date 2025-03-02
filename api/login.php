@@ -4,10 +4,7 @@ require __DIR__."/bootstrap.php";
 if ($_SERVER["REQUEST_METHOD"] != "POST") {
     http_response_code(405);
     header("Allow: POST");
-    exit(0);
-}
-
-if (!array_key_exists("username", $_POST) || !array_key_exists("password", $_POST)) {
+} elseif (!array_key_exists("username", $_POST) || !array_key_exists("password", $_POST)) {
     http_response_code(400);
     echo json_encode(["message" => "User credential are missing"]);
 } else {
@@ -21,18 +18,12 @@ if (!array_key_exists("username", $_POST) || !array_key_exists("password", $_POS
         //$data = ["user_id" => $user["id"], "username" => $user["username"]];
         //$access_token = json_encode($data);
         //echo json_encode(["access_token" => base64_encode($access_token)]);
-        $data_for_access_token = ["sub" => $user["id"], 
-                                "username" => $user["username"],
-                                "exp" => time() + 20];
-        
-        $data_for_refresh_token = ["sub"=> $user["id"],
-                                    "exp" => time() + 3600];
-        
         $codec = new JWTCodec($_ENV["SECRET_KEY"]);
-        echo json_encode(["access_token" => $codec->getJWTToken($data_for_access_token),
-                         "refresh_token" => $codec->getJWTToken($data_for_refresh_token)
-                        ]);
-
+        
+        require __DIR__."/tokens.php";
+        
+        $obj_refresh_token_gateway = new RefreshTokenGateway($database, $_ENV["SECRET_KEY"]);
+        $obj_refresh_token_gateway->saveRefreshToken($refresh_token, $refresh_token_expiry);
     }
 }
 

@@ -17,4 +17,8 @@ class UserController {
     public function getByUsername(string $username) : array | FALSE {
         return $this->obj_user_gateway->getByUsername($username);
     }
+
+    public function getById(int $id) : array | FALSE {
+        return $this->obj_user_gateway->getById($id);
+    }
 }
