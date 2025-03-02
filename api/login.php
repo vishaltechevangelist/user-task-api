@@ -21,10 +21,17 @@ if (!array_key_exists("username", $_POST) || !array_key_exists("password", $_POS
         //$data = ["user_id" => $user["id"], "username" => $user["username"]];
         //$access_token = json_encode($data);
         //echo json_encode(["access_token" => base64_encode($access_token)]);
-        $data = ["sub" => $user["id"], "username" => $user["username"]];
+        $data_for_access_token = ["sub" => $user["id"], 
+                                "username" => $user["username"],
+                                "exp" => time() + 20];
+        
+        $data_for_refresh_token = ["sub"=> $user["id"],
+                                    "exp" => time() + 3600];
         
         $codec = new JWTCodec($_ENV["SECRET_KEY"]);
-        echo json_encode(["access_token" => $codec->getJWTToken($data)]);
+        echo json_encode(["access_token" => $codec->getJWTToken($data_for_access_token),
+                         "refresh_token" => $codec->getJWTToken($data_for_refresh_token)
+                        ]);
 
     }
 }

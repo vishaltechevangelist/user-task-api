@@ -4,7 +4,7 @@ class Auth {
 
     private int $user_id;
 
-    public function __construct(private UserGateway $obj_user_gateway) {
+    public function __construct(private UserGateway $obj_user_gateway, private JWTCodec $obj_jwt_codec) {
     }
 
     public function authenticateAPIKey() : bool {
@@ -36,7 +36,7 @@ class Auth {
 
     public function authenticateAccessToken() : bool {
 
-        if (!preg_match("/^Bearer\s+(.*)/", $_SERVER["REDIRECT_HTTP_AUTHORIZATION"], $matches)) {
+       if (!preg_match("/^Bearer\s+(.*)/", $_SERVER["REDIRECT_HTTP_AUTHORIZATION"], $matches)) {
             http_response_code(400);
             echo json_encode(["message" => "Invalid Credentials with wrong scheme or code"]);
             return FALSE;
@@ -49,8 +49,36 @@ class Auth {
             return FALSE;
         }
         
-        $data = json_decode($token_str, true);
+        $data = json_decode($token_str, true); 
         $this->user_id = $data["user_id"];
+        return true;
+    }
+
+    public function authenticateJWTToken() : bool {
+
+        if (!preg_match("/^Bearer\s+(.*)/", $_SERVER["REDIRECT_HTTP_AUTHORIZATION"], $matches)) {
+            http_response_code(400);
+            echo json_encode(["message" => "Invalid Credentials with wrong scheme or code"]);
+            return FALSE;
+        }
+        
+        try {
+            $data = $this->obj_jwt_codec->decodeJWTToken($matches[1]);
+        } catch (TokenExpiredException $e) {
+            http_response_code(401);
+            echo json_encode(["message" => "Token has expired"]);
+            return FALSE;
+        } catch (InvalidSignatureException $e) {    
+            http_response_code(401);
+            echo json_encode(["message" => "Invalid Signature"]);
+            return FALSE;
+        } catch (Exception $e) {
+            http_response_code(400);
+            echo json_encode(["message" => $e->getMessage()]);
+            return FALSE;
+        }
+
+        $this->user_id = $data["sub"];
         return true;
     }
 }

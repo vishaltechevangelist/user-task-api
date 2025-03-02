@@ -1,9 +1,11 @@
 <?php
 require __DIR__."/bootstrap.php";
 
-$obj_auth = new Auth(new UserGateway($database));
+// $obj_auth = new Auth(new UserGateway($database), null);
 // if ($obj_auth->authenticateAPIKey()) {
-if ($obj_auth->authenticateAccessToken()) {
+// if ($obj_auth->authenticateAccessToken()) { 
+$obj_auth = new Auth(new UserGateway($database), new JWTCodec($_ENV["SECRET_KEY"]));
+if ($obj_auth->authenticateJWTToken()) {
 
     $method = $_SERVER["REQUEST_METHOD"];
 

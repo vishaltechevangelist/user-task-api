@@ -27,22 +27,28 @@ class JWTCodec {
         $data = explode(".", $token);
 
         if (count($data) != 3 || empty($data[0]) || empty($data[1]) || empty($data[2])) {
-                throw new Exception("Invalid Access Token");
+                throw new Exception("Invalid JWT Token");
         }
 
         $header_from_token = $data[0];
         $payload_from_token = $data[1];
-    
+
+
+
         $signature = hash_hmac("sha256", $header_from_token . "." . $payload_from_token, 
         $this->key, true);
 
         $signature_from_token = $this->base64URLDecode($data[2]);
 
         if (!hash_equals($signature, $signature_from_token)) {
-            throw new Exception("Signature doesn't match");
+            throw new InvalidSignatureException;
         }
         
         $payload = json_decode($this->base64URLDecode($data[1]), true);
+
+        if ($payload["exp"] < time()) {
+            throw new TokenExpiredException;
+        }
         return $payload;
     }
 
