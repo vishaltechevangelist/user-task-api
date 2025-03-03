@@ -1,6 +1,16 @@
 <?php
 require __DIR__."/bootstrap.php";
 
+use App\Database;
+use App\UserGateway;
+use App\ErrorHandler;
+use App\InvalidSignatureException;
+use App\JWTCodec;
+use App\RefreshTokenGateway;
+use App\TaskGateway;
+use App\TokenExpiredException;
+use App\UserController;
+
 if ($_SERVER["REQUEST_METHOD"] != "POST") {
     http_response_code(405);
     header("Allow: POST");
@@ -8,6 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") {
     http_response_code(400);
     echo json_encode(["message" => "User credential are missing"]);
 } else {
+    
     $obj_user_controller = new UserController(new UserGateway($database));
     $user = $obj_user_controller->getByUsername($_POST["username"]);
 

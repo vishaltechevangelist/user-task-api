@@ -1,8 +1,13 @@
 <?php
+namespace App;
+
+use App\Database;
+use PDO;
 
 class RefreshTokenGateway {
-    private PDO $conn;
-    public function __construct(Database $database, string $key) {
+    private $conn;
+    
+    public function __construct(Database $database, private string $key) {
         $this->conn = $database->getConnection();
         $this->key = $key;
     }

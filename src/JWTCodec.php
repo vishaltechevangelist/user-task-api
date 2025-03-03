@@ -1,4 +1,7 @@
 <?php
+namespace App;
+
+use Exception;
 
 class JWTCodec {
 
@@ -32,8 +35,6 @@ class JWTCodec {
 
         $header_from_token = $data[0];
         $payload_from_token = $data[1];
-
-
 
         $signature = hash_hmac("sha256", $header_from_token . "." . $payload_from_token, 
         $this->key, true);

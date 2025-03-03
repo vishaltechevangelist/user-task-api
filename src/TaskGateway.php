@@ -1,8 +1,12 @@
 <?php
+namespace App;
+
+use App\Database;
+use PDO;
 
 class TaskGateway{
 
-    private PDO $conn;
+    private $conn;
     public function __construct(Database $database) {
         $this->conn = $database->getConnection();
     }

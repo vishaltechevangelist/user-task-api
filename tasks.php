@@ -1,9 +1,15 @@
 <?php
 require __DIR__."/bootstrap.php";
 
+use App\Auth;
+use App\UserGateway;
+use App\JWTCodec;
+use App\TaskController;
+use App\TaskGateway;
 // $obj_auth = new Auth(new UserGateway($database), null);
 // if ($obj_auth->authenticateAPIKey()) {
 // if ($obj_auth->authenticateAccessToken()) { 
+
 $obj_auth = new Auth(new UserGateway($database), new JWTCodec($_ENV["SECRET_KEY"]));
 if ($obj_auth->authenticateJWTToken()) {
 

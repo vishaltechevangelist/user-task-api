@@ -1,4 +1,8 @@
 <?php
+namespace App;
+
+use App\UserGateway;
+use App\JWTCodec;
 
 class Auth {
 

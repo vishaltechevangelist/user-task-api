@@ -1,7 +1,12 @@
 <?php
 
+namespace App;
+
+use App\Database;
+use PDO;
+
 class UserGateway {
-    private PDO $conn;
+    private $conn = null;
     public function __construct(Database $database) {
         $this->conn = $database->getConnection();
     }

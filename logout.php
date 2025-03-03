@@ -1,6 +1,8 @@
 <?php
 require __DIR__."/bootstrap.php";
 
+use App\RefreshTokenGateway; 
+
 $obj_refresh_token_gateway = new RefreshTokenGateway($database, $_ENV["SECRET_KEY"]);
 
 if ($_SERVER["REQUEST_METHOD"] != "POST") {

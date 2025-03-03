@@ -1,7 +1,7 @@
 <?php
 
 
-$data_for_access_token = ["sub" => $user["id"], "username" => $user["username"], "exp" => time() + 20];
+$data_for_access_token = ["sub" => $user["id"], "username" => $user["username"], "exp" => time() + 3600];
   
 
 $refresh_token_expiry = time() + 3600;
